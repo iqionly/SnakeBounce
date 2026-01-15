@@ -10,8 +10,8 @@ namespace SnakeBounce
 {
     public class Game1 : Core
     {
-        private TextureRegion _snake;
-        private TextureRegion _apple;
+        private AnimatedSprite _snake;
+        private AnimatedSprite _apple;
 
         public Game1() : base("SnakeBounce", 1280, 720, false)
         {
@@ -30,8 +30,9 @@ namespace SnakeBounce
             // Create the texture atlas from the XML configuration file
             TextureAtlas atlas = TextureAtlas.FromFile(Content, "images/atlas-definition.xml");
 
-            _snake = atlas.GetRegion("snake-head-right");
-            _apple = atlas.GetRegion("apple");
+            _snake = atlas.CreateAnimatedSprite("snake-animation");
+
+            _apple = atlas.CreateAnimatedSprite("apple-animation");
         }
 
         protected override void Update(GameTime gameTime)
@@ -39,7 +40,11 @@ namespace SnakeBounce
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            // Update snake animations
+            _snake.Update(gameTime);
+
+            // Update apple animations
+            _apple.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -51,11 +56,11 @@ namespace SnakeBounce
             // Begin the sprite batch to prepare for rendering.
             SpriteBatch.Begin();
 
-            // Draw the slime texture region at a scale of 4.0
-            _snake.Draw(SpriteBatch, Vector2.Zero, Color.White, 0.0f, Vector2.One, 1.0f, SpriteEffects.None, 0.0f);
+            // Draw the slime sprite.
+            _snake.Draw(SpriteBatch, Vector2.Zero);
 
-            // Draw the bat texture region 10px to the right of the slime at a scale of 4.0
-            _apple.Draw(SpriteBatch, new Vector2(_snake.Width * 4.0f + 10, 0), Color.White, 0.0f, Vector2.One, 1.0f, SpriteEffects.None, 1.0f);
+            // Draw the bat sprite 10px to the right of the slime.
+            _apple.Draw(SpriteBatch, new Vector2(_snake.Width + 10, 0));
 
             // Always end the sprite batch when finished.
             SpriteBatch.End();

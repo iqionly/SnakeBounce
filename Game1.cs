@@ -24,6 +24,8 @@ namespace SnakeBounce
         private Queue<Vector2> _inputBuffer;
         private const int MAX_BUFFER_SIZE = 2;
 
+        private Vector2 _lastDirection = Vector2.UnitY;
+
         public Game1() : base("SnakeBounce", 1280, 720, false)
         {
 
@@ -156,19 +158,19 @@ namespace SnakeBounce
                 speed *= 1.5f;
             }
 
-            if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
+            if ((keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up)) && _lastDirection != Vector2.UnitY)
             {
                 newDirection = -Vector2.UnitY;
             }
-            else if (keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down))
+            else if ((keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down)) && _lastDirection != -Vector2.UnitY)
             {
                 newDirection = Vector2.UnitY;
             }
-            else if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
+            else if ((keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left)) && _lastDirection != Vector2.UnitX)
             {
                 newDirection = -Vector2.UnitX;
             }
-            else if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
+            else if ((keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right)) && _lastDirection != -Vector2.UnitX)
             {
                 newDirection = Vector2.UnitX;
             }
@@ -180,11 +182,11 @@ namespace SnakeBounce
             }
 
             // In movement update code.
-            if (_inputBuffer.Count > 0)
+            if (_inputBuffer.Count > 1)
             {
-                Vector2 nextDirection = _inputBuffer.Dequeue();
-                _snakePosition += nextDirection * speed;
+                _lastDirection = _inputBuffer.Dequeue();
             }
+            _snakePosition += _lastDirection * speed;
         }
 
         protected override void Draw(GameTime gameTime)

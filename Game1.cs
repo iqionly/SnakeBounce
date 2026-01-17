@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
+using MonoGameLibrary.Input;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace SnakeBounce
 {
@@ -67,27 +67,25 @@ namespace SnakeBounce
 
         private void CheckKeyboardInput()
         {
-            KeyboardState keyboardState = Keyboard.GetState();
-
             float speed = MOVEMENT_SPEED;
-            if (keyboardState.IsKeyDown(Keys.Space))
+            if (Input.Keyboard.IsKeyDown(Keys.Space))
             {
                 speed *= 1.5f;
             }
 
-            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+            if (Input.Keyboard.IsKeyDown(Keys.W) || Input.Keyboard.IsKeyDown(Keys.Up))
             {
                 _snakePosition.Y -= speed;
             }
-            else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+            else if (Input.Keyboard.IsKeyDown(Keys.D) || Input.Keyboard.IsKeyDown(Keys.Right))
             {
                 _snakePosition.X += speed;
             }
-            else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+            else if (Input.Keyboard.IsKeyDown(Keys.S) || Input.Keyboard.IsKeyDown(Keys.Down))
             {
                 _snakePosition.Y += speed;
             }
-            else if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
+            else if (Input.Keyboard.IsKeyDown(Keys.A) || Input.Keyboard.IsKeyDown(Keys.Left))
             {
                 _snakePosition.X -= speed;
             }
@@ -95,51 +93,51 @@ namespace SnakeBounce
 
         private void CheckGamePadInput()
         {
-            GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
+            GamePadInfo gamePadOne = Input.GamePads[(int)PlayerIndex.One];
 
             // If the A button is held down, the movement speed increases by 1.5
             // and the gamepad vibrates as feedback to the player.
             float speed = MOVEMENT_SPEED;
-            if (gamePadState.IsButtonDown(Buttons.A))
+            if (gamePadOne.IsButtonDown(Buttons.A))
             {
                 speed *= 1.5f;
-                GamePad.SetVibration(PlayerIndex.One, 1.0f, 1.0f);
+                gamePadOne.SetVibration(1.0f, TimeSpan.FromSeconds(1));
             }
             else
             {
-                GamePad.SetVibration(PlayerIndex.One, 0.0f, 0.0f);
+                gamePadOne.StopVibration();
             }
 
             // Check thumbstick first since it has priority over which gamepad input
             // is movement.  It has priority since the thumbstick values provide a
             // more granular analog value that can be used for movement.
-            if (gamePadState.ThumbSticks.Left != Vector2.Zero)
+            if (gamePadOne.LeftThumbStick != Vector2.Zero)
             {
-                _snakePosition.X += gamePadState.ThumbSticks.Left.X * speed;
-                _snakePosition.Y -= gamePadState.ThumbSticks.Left.Y * speed;
+                _snakePosition.X += gamePadOne.LeftThumbStick.X * speed;
+                _snakePosition.Y -= gamePadOne.LeftThumbStick.Y * speed;
             }
             else
             {
                 // If DPadUp is down, move the slime up on the screen.
-                if (gamePadState.IsButtonDown(Buttons.DPadUp))
+                if (gamePadOne.IsButtonDown(Buttons.DPadUp))
                 {
                     _snakePosition.Y -= speed;
                 }
 
                 // If DPadDown is down, move the slime down on the screen.
-                if (gamePadState.IsButtonDown(Buttons.DPadDown))
+                if (gamePadOne.IsButtonDown(Buttons.DPadDown))
                 {
                     _snakePosition.Y += speed;
                 }
 
                 // If DPapLeft is down, move the slime left on the screen.
-                if (gamePadState.IsButtonDown(Buttons.DPadLeft))
+                if (gamePadOne.IsButtonDown(Buttons.DPadLeft))
                 {
                     _snakePosition.X -= speed;
                 }
 
                 // If DPadRight is down, move the slime right on the screen.
-                if (gamePadState.IsButtonDown(Buttons.DPadRight))
+                if (gamePadOne.IsButtonDown(Buttons.DPadRight))
                 {
                     _snakePosition.X += speed;
                 }
@@ -149,28 +147,27 @@ namespace SnakeBounce
         private void CheckKeyboardInputBuffer()
         {
             // In the input handling code:
-            KeyboardState keyboard = Keyboard.GetState();
             Vector2 newDirection = Vector2.Zero;
 
             float speed = MOVEMENT_SPEED;
-            if (keyboard.IsKeyDown(Keys.Space))
+            if (Input.Keyboard.IsKeyDown(Keys.Space))
             {
                 speed *= 1.5f;
             }
 
-            if (_lastDirection != Vector2.UnitY && (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up)))
+            if (_lastDirection != Vector2.UnitY && (Input.Keyboard.IsKeyDown(Keys.W) || Input.Keyboard.IsKeyDown(Keys.Up)))
             {
                 newDirection = -Vector2.UnitY;
             }
-            else if (_lastDirection != -Vector2.UnitY && (keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down)))
+            else if (_lastDirection != -Vector2.UnitY && (Input.Keyboard.IsKeyDown(Keys.S) || Input.Keyboard.IsKeyDown(Keys.Down)))
             {
                 newDirection = Vector2.UnitY;
             }
-            else if (_lastDirection != Vector2.UnitX && (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left)))
+            else if (_lastDirection != Vector2.UnitX && (Input.Keyboard.IsKeyDown(Keys.A) || Input.Keyboard.IsKeyDown(Keys.Left)))
             {
                 newDirection = -Vector2.UnitX;
             }
-            else if (_lastDirection != -Vector2.UnitX && (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right)))
+            else if (_lastDirection != -Vector2.UnitX && (Input.Keyboard.IsKeyDown(Keys.D) || Input.Keyboard.IsKeyDown(Keys.Right)))
             {
                 newDirection = Vector2.UnitX;
             }

@@ -158,19 +158,19 @@ namespace SnakeBounce
                 speed *= 1.5f;
             }
 
-            if ((keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up)) && _lastDirection != Vector2.UnitY)
+            if (_lastDirection != Vector2.UnitY && (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up)))
             {
                 newDirection = -Vector2.UnitY;
             }
-            else if ((keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down)) && _lastDirection != -Vector2.UnitY)
+            else if (_lastDirection != -Vector2.UnitY && (keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down)))
             {
                 newDirection = Vector2.UnitY;
             }
-            else if ((keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left)) && _lastDirection != Vector2.UnitX)
+            else if (_lastDirection != Vector2.UnitX && (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left)))
             {
                 newDirection = -Vector2.UnitX;
             }
-            else if ((keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right)) && _lastDirection != -Vector2.UnitX)
+            else if (_lastDirection != -Vector2.UnitX && (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right)))
             {
                 newDirection = Vector2.UnitX;
             }
